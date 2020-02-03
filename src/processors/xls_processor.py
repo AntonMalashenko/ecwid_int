@@ -9,11 +9,13 @@ from openpyxl.styles.colors import YELLOW, BLACK, DARKYELLOW
 
 from settings.app_settings import FILES_PATH
 from settings.table_constants import HEADER, SITE_URL
+from src.utils import clean_phone
 
 
 class XlsProcessor:
-    def __init__(self, data: list):
+    def __init__(self, data, products):
         self.data = data
+        self.products = products
 
     def make_table(self):
         workbook = openpyxl.Workbook()
@@ -59,7 +61,14 @@ class XlsProcessor:
             sheet.column_dimensions[cell.column_letter].width = 40
         sheet.row_dimensions[1].height = 60
 
-        for row, order in enumerate(self.data, start=2):
+        row =2
+        for order in self.data:
+            product = self.products.get(order.get('productId'))
+            person = order.get('shippingPerson') \
+                if order.get('shippingPerson') \
+                else order.get('billingPerson')
+            if person.get('countryCode') != 'RU':
+                continue
             sheet.cell(row=row, column=1, value=order.get('vendorOrderNumber'))
             sheet.cell(row=row, column=2, value=order.get("Barcode_of_pallet"))  # not found
             sheet.cell(row=row, column=3, value=order.get("Barcode_of_main_box"))  # not found
@@ -74,14 +83,12 @@ class XlsProcessor:
                 sheet.cell(row=row, column=7, value='Unknown')
             sheet.cell(row=row, column=8, value=order.get('delivery_type'))  # not found
             sheet.cell(row=row, column=9, value=order.get('pup_code'))  # not found
-
-            person = order.get('shippingPerson') \
-                if order.get('shippingPerson') \
-                else order.get('billingPerson')
             name = person.get('name')
             sheet.cell(row=row, column=10, value=name)  # "Фамилия Имя Отчество  получателя/\nName Surname Middle name",
 
             phone = person.get('phone')
+            if phone:
+                phone = clean_phone(phone)
             sheet.cell(row=row, column=11, value=phone)  # "Телефон получателя  (7 XXX XXX XXXX)/\nRecipient's phone number",
 
             country_code = person.get('countryCode')
@@ -110,7 +117,10 @@ class XlsProcessor:
             except TypeError:
                 sheet.cell(row=row, column=22, value='Unknown')
 
-            sheet.cell(row=row, column=23, value=order.get('item_link'))  # not found   "Ссылка на товар в \nинтернет-магазине/\nLink to the item innan online-store",
+            sheet.column_dimensions[
+                sheet.cell(row=row, column=23).column_letter].width = 120
+            url = product.get('url') if product else ''
+            sheet.cell(row=row, column=23, value=url)  # "Ссылка на товар в \nинтернет-магазине/\nLink to the item innan online-store",
             sheet.cell(row=row, column=24, value=SITE_URL)  #  "Адрес интернет-магазина/\nOnline shop website",
             sheet.cell(row=row, column=25, value=order.get('HS_Code'))  # not found   "Код ТН ВЭД/\nHS Code",
             sheet.cell(row=row, column=26, value=order.get('shortDescription'))  #   "Краткое описание \n(на языке поставщика)/\nItem Description in English",
@@ -127,6 +137,7 @@ class XlsProcessor:
             sheet.cell(row=row, column=34, value=order.get('otification expiration date'))  # not found   "Дата окончания\nдействия нотификации/\nNotification expiration date",
             sheet.cell(row=row, column=35, value=order.get('Notification code'))  # not found   "Код нотификации/\nNotification code",
             sheet.cell(row=row, column=36, value=order.get('Individual Tax ID'))  # not found   "ИНН получателя/\nIndividual Tax ID (INN)",
+            row += 1
 
         now = datetime.now().strftime("%d_%m_%Y_%H_%M")
         filename = now + ".xls"

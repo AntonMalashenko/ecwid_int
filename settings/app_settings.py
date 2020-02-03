@@ -9,6 +9,7 @@ BASE_ECWID_URL = 'https://app.ecwid.com'
 ORDER_DETAIL_URL_TEMPLATE = '/api/v3/{store_id}/orders/{order_id}'
 
 ORDER_SEARCH_URL_TEMPLATE = '/api/v3/{store_id}/orders'
+PRODUCT_SEARCH_URL_TEMPLATE = '/api/v3/{}/products?productId={}'
 
 STORE_PROFILE_URL_TEMPLATE = '/api/v3/{store_id}/profile'
 

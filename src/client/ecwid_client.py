@@ -41,21 +41,35 @@ class EcwidClient:
         raise requests.HTTPError(response.status_code, response.reason)
 
     def store_profile(self):
-            order_url = app_settings.STORE_PROFILE_URL_TEMPLATE.format(
-                store_id=self.store_id,
+        order_url = app_settings.STORE_PROFILE_URL_TEMPLATE.format(
+            store_id=self.store_id,
+        )
+        response = requests.get(
+            url=urljoin(app_settings.BASE_ECWID_URL, order_url),
+            params=dict(
+                token=self.token
             )
-            response = requests.get(
-                url=urljoin(app_settings.BASE_ECWID_URL, order_url),
-                params=dict(
-                    token=self.token
-                )
+        )
+        return response
+
+    def get_products(self, product_ids):
+        order_url = app_settings.PRODUCT_SEARCH_URL_TEMPLATE.format(
+            self.store_id, ','.join(product_ids))
+        response = requests.get(
+            url=urljoin(app_settings.BASE_ECWID_URL, order_url),
+            params=dict(
+                token=self.token
             )
-            return response
+        )
+        if response.status_code == 200:
+            return response.json()
+        raise requests.HTTPError(response.status_code, response.reason)
+
 
 if __name__ == '__main__':
     client = EcwidClient(
         app_settings.API_PRIVATE_TOKEN,
         app_settings.STORE_ID
     )
-    orders = client.search_orders([81, 66])
+    product = client.get_product(160436484)
     store = client.store_profile()

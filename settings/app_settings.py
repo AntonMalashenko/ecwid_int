@@ -18,4 +18,5 @@ PROJECT_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), ".."),
 )
 
-SHEETS_DIR = os.path.join(PROJECT_ROOT, 'generated_files')
+FILES_DIR_NAME = 'generated_files'
+FILES_PATH = os.path.join(PROJECT_ROOT, FILES_DIR_NAME)

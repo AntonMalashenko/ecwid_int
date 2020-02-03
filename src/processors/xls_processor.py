@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 import os
 from datetime import datetime
 
@@ -5,7 +7,7 @@ import openpyxl
 from openpyxl.styles import Alignment, Color, PatternFill, Font, Border, Side
 from openpyxl.styles.colors import YELLOW, BLACK, DARKYELLOW
 
-from settings.app_settings import SHEETS_DIR
+from settings.app_settings import FILES_PATH
 from settings.table_constants import HEADER, SITE_URL
 
 
@@ -128,5 +130,6 @@ class XlsProcessor:
 
         now = datetime.now().strftime("%d_%m_%Y_%H_%M")
         filename = now + ".xls"
-        path = os.path.join(SHEETS_DIR, filename)
+        path = os.path.join(FILES_PATH, filename)
         workbook.save(filename=path)
+        print("### file {} created".format(path))

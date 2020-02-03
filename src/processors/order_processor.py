@@ -18,9 +18,7 @@ class OrderProcessor:
         product_ids = self.prepare_product_request(orders)
         products = self.client.get_products(product_ids)
         products = self.create_products_dict(products)
-
-        processor = XlsProcessor(orders, products)
-        processor.make_table()
+        XlsProcessor(orders, products).make_table()
 
     def create_products_dict(self, products):
         return {

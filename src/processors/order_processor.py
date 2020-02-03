@@ -2,7 +2,7 @@ import copy
 import json
 
 from settings.app_settings import PROJECT_ROOT
-from src.processors.xls_processor import XlsProcessor
+from src.processors.xls_processor import XlsProcessor, make_table
 
 
 class OrderProcessor:
@@ -18,7 +18,7 @@ class OrderProcessor:
         product_ids = self.prepare_product_request(orders)
         products = self.client.get_products(product_ids)
         products = self.create_products_dict(products)
-        XlsProcessor(orders, products).make_table()
+        make_table(orders, products)
 
     def create_products_dict(self, products):
         return {

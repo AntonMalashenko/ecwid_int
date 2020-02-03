@@ -11,13 +11,10 @@ def app():
         app_settings.API_PRIVATE_TOKEN,
         app_settings.STORE_ID
     )
-    # orders = client.search_orders()
-    # orders = make_list_of_orders(orders)
-    orders = json.load(open('data.json', 'rb'))
+    orders = client.search_orders()
+    orders = make_list_of_orders(orders)
     processor = XlsProcessor(orders)
     processor.make_table()
-
-
 
 if __name__ == '__main__':
     app()

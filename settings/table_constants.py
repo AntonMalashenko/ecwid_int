@@ -5,8 +5,8 @@ HEADER = [
     "Штрихкод посылки/\nbarcode of parcel",
     "Длина коробки (мм)/\nbox length (mm)",
     "Ширина коробки (мм)/\nbox wigth (mm)",
-    "Высота коробки (мм)/\nbox height (mm)",
-    "(1 - Доставка до пункта выдачи, \n2 - Курьерская доставка)/\nDelivery typ(1 - to Pick-up Point, \n2 - Courier delivery)",
+    "Высота коробки (мм)/\nbox weight (mm)",
+    "(1 - Доставка до пункта выдачи, \n2 - Курьерская доставка)/\nDelivery type(1 - to Pick-up Point, \n2 - Courier delivery)",
     "Код ПВЗ/\n PUP code",
     "Фамилия Имя Отчество  получателя/\nName Surname Middle name",
     "Телефон получателя  (7 XXX XXX XXXX)/\nRecipient's phone number",
@@ -37,6 +37,4 @@ HEADER = [
     "ИНН получателя/\nIndividual Tax ID (INN)",
 ]
 
-COLUMNS = [
-'vendorOrderNumber',
-]
+SITE_URL = 'https://www.biohelp.me/'

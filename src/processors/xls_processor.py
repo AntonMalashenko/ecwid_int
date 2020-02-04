@@ -52,12 +52,14 @@ def make_table(data, products):
 
     row =2
     for order in data:
-        product = products.get(order.get('productId'))
         person = order.get('shippingPerson') \
             if order.get('shippingPerson') \
             else order.get('billingPerson')
         if person.get('countryCode') != 'RU':
             continue
+
+        product = products.get(order.get('productId'))
+
         sheet.cell(row=row, column=1, value=order.get('vendorOrderNumber'))
         sheet.cell(row=row, column=2, value=order.get("Barcode_of_pallet"))  # not found
         sheet.cell(row=row, column=3, value=order.get("Barcode_of_main_box"))  # not found
@@ -96,18 +98,23 @@ def make_table(data, products):
         )
         sheet.cell(row=row, column=15, value=address)  #  "Адрес получателя/\nRecipient's address",
         sheet.cell(row=row, column=16, value=order.get('sku'))  #   "Артикул товара/\nItem ID or SKU",
-        sheet.cell(row=row, column=17, value=order.get('Brand'))  #  not found  "Производитель/\nБренд/\nBrand/\nProducer/\nTrademark",
-        sheet.cell(row=row, column=18, value=order.get('name'))  #   "Наименование/\nItem name (Model)",
+
+        prod_attrs = product.get('attributes')
+        brand = ''
+        if prod_attrs:
+            for attr in prod_attrs:
+                if attr.get('type') == 'BRAND':
+                    brand = attr.get('value')
+        sheet.cell(row=row, column=17, value=brand)  #  "Производитель/\nБренд/\nBrand/\nProducer/\nTrademark",
+        sheet.cell(row=row, column=18, value=product.get('name'))  #   "Наименование/\nItem name (Model)",
         sheet.cell(row=row, column=19, value=order.get('quantity'))  # "Количество/\nQuantity",
-        sheet.cell(row=row, column=20, value=order.get('productPrice'))  #   "Цена 1 единицы/\nPrice for 1 item",
-        sheet.cell(row=row, column=21, value=order.get('currency'))  # not found   "Валюта цены  (EUR, USD, GBP, RUB)/\nCurrency",
+        sheet.cell(row=row, column=20, value=product.get('price'))  #   "Цена 1 единицы/\nPrice for 1 item",
+        sheet.cell(row=row, column=21, value="USD")  # "Валюта цены  (EUR, USD, GBP, RUB)/\nCurrency",
         try:
-            sheet.cell(row=row, column=22, value=order.get('weight') * 100)  # "Вес брутто 1 единицы (грамм)/\nGross weight of 1 item (gr)",
+            sheet.cell(row=row, column=22, value=product.get('weight'))  # "Вес брутто 1 единицы (грамм)/\nGross weight of 1 item (gr)",
         except TypeError:
             sheet.cell(row=row, column=22, value='Unknown')
 
-        sheet.column_dimensions[
-            sheet.cell(row=row, column=23).column_letter].width = 120
         url = product.get('url') if product else ''
         sheet.cell(row=row, column=23, value=url)  # "Ссылка на товар в \nинтернет-магазине/\nLink to the item innan online-store",
         sheet.cell(row=row, column=24, value=SITE_URL)  #  "Адрес интернет-магазина/\nOnline shop website",
@@ -127,7 +134,17 @@ def make_table(data, products):
         sheet.cell(row=row, column=35, value=order.get('Notification code'))  # not found   "Код нотификации/\nNotification code",
         sheet.cell(row=row, column=36, value=order.get('Individual Tax ID'))  # not found   "ИНН получателя/\nIndividual Tax ID (INN)",
         row += 1
-        save_table(workbook)
+
+    for col in [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 16, 19, 20, 21,
+                22, 25, 29, 30, 31, 32, 33, 34, 35, 36,]:
+        sheet.column_dimensions[
+            sheet.cell(row=row, column=col).column_letter].width = 20
+
+    for col in [18, 23, 26]:
+        sheet.column_dimensions[
+            sheet.cell(row=row, column=col).column_letter].width = 100
+
+    save_table(workbook)
 
 
 def save_table(wb):

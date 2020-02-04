@@ -1,8 +1,6 @@
 import copy
-import json
 
-from settings.app_settings import PROJECT_ROOT
-from src.processors.xls_processor import XlsProcessor, make_table
+from src.processors.xls_processor import make_table
 
 
 class OrderProcessor:
@@ -43,10 +41,6 @@ class OrderProcessor:
     def make_list_of_orders(self):
         orders_list = []
         for item in self.response.get('items'):
-            # if item.get('orderNumber') == 79:
-            #     json.dump(item, open(PROJECT_ROOT+'/order_79.json', 'w'), indent=2)
             orders = self.split_order(item)
             orders_list.extend(orders)
         return orders_list
-
-

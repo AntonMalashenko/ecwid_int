@@ -63,7 +63,7 @@ class EcwidClient:
         )
         if response.status_code == 200:
             return response.json()
-        raise requests.HTTPError(response.status_code, response.reason)
+        print(response.status_code, response.reason)
 
 
 if __name__ == '__main__':

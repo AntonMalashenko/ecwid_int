@@ -64,12 +64,3 @@ class EcwidClient:
         if response.status_code == 200:
             return response.json()
         print(response.status_code, response.reason)
-
-
-if __name__ == '__main__':
-    client = EcwidClient(
-        app_settings.API_PRIVATE_TOKEN,
-        app_settings.STORE_ID
-    )
-    product = client.get_product(160436484)
-    store = client.store_profile()

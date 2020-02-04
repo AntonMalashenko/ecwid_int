@@ -24,7 +24,8 @@ class EcwidClient:
 
     def search_orders(self, order_ids=None):
         if order_ids:
-            qery_str = '?orderNumber={}'.format(','.join([str(order) for order in set(order_ids)]))
+            qery_str = '?orderNumber={}'.format(
+                ','.join([str(order) for order in set(order_ids)]))
             order_url = app_settings.ORDER_SEARCH_URL_TEMPLATE.format(
                 store_id=self.store_id) + qery_str
         else:

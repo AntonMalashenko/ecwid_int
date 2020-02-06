@@ -58,7 +58,7 @@ def make_table(data, products):
         if person.get('countryCode') != 'RU':
             continue
 
-        product = products.get(order.get('productId'))
+        product = products.get(order.get('productId')) or dict()
 
         sheet.cell(row=row, column=1, value=order.get('vendorOrderNumber'))
         sheet.cell(row=row, column=2, value=order.get("Barcode_of_pallet"))  # not found
@@ -99,7 +99,10 @@ def make_table(data, products):
         sheet.cell(row=row, column=15, value=address)  #  "Адрес получателя/\nRecipient's address",
         sheet.cell(row=row, column=16, value=order.get('sku'))  #   "Артикул товара/\nItem ID or SKU",
 
-        prod_attrs = product.get('attributes')
+        try:
+            prod_attrs = product.get('attributes')
+        except AttributeError:
+            prod_attrs = dict()
         brand = ''
         if prod_attrs:
             for attr in prod_attrs:

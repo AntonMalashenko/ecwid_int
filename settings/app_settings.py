@@ -1,7 +1,7 @@
 import os
 
-API_PUBLIC_TOKEN = 'public_7iafLdaH32FtCLZkNpyWZtanChFckvbK'
-API_PRIVATE_TOKEN = 'secret_nHy9gyXH85QfDmHQHJHRcA79j7YWpKp9'
+API_PUBLIC_TOKEN = ''
+API_PRIVATE_TOKEN = ''
 STORE_ID = '17138055'
 
 BASE_ECWID_URL = 'https://app.ecwid.com'
@@ -23,8 +23,3 @@ FILES_DIR_NAME = 'generated_files'
 FILES_PATH = os.path.join(PROJECT_ROOT, FILES_DIR_NAME)
 
 MAX_PRODUCT_LENGTH = 100
-
-
-API_PUBLIC_TOKEN = 'public_aFqbCPNH6byGzTgrayjMsM2GttF5k6sH'
-API_PRIVATE_TOKEN = 'secret_ceKiyH8E32x98tiiY72D3FhtfiKZsY93'
-STORE_ID = '15554429'

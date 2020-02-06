@@ -1,6 +1,8 @@
 import copy
 
+from settings.app_settings import MAX_PRODUCT_LENGTH
 from src.processors.xls_processor import make_table
+from src.utils import split_array
 
 
 class OrderProcessor:
@@ -14,14 +16,18 @@ class OrderProcessor:
         self.response = self.client.search_orders()
         orders = self.make_list_of_orders()
         product_ids = self.prepare_product_request(orders)
-        products = self.client.get_products(product_ids)
+        product_ids = split_array(product_ids, MAX_PRODUCT_LENGTH)
+        products = []
+        for array in product_ids:
+            response = self.client.get_products(array).get('items')
+            products.extend(response)
         products = self.create_products_dict(products)
         make_table(orders, products)
 
     def create_products_dict(self, products):
         return {
             item.get('id'): item
-            for item in products.get('items')
+            for item in products
             if item.get('id')
         }
 

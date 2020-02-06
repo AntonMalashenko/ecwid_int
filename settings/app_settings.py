@@ -21,3 +21,5 @@ PROJECT_ROOT = os.path.abspath(
 
 FILES_DIR_NAME = 'generated_files'
 FILES_PATH = os.path.join(PROJECT_ROOT, FILES_DIR_NAME)
+
+MAX_PRODUCT_LENGTH = 10

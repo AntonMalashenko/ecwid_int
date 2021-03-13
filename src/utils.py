@@ -42,7 +42,7 @@ def get_cmd_args():
     parser.add_argument(
         '--dimconv',
         type=int,
-        help='Dimension conversion from cm to mm. 0 for YES or 1 for NO.\ndefault=1',
+        help='Dimension conversion from cm to mm. 1 for YES or 0 for NO.\ndefault=1',
         default=1,
         required=False
     )
@@ -64,7 +64,7 @@ def get_cmd_args():
 
     # dimconv validation
     if args.dimconv not in [1, 0]:
-        raise ValueError('dimconv: 0 for YES or 1 for NO')
+        raise ValueError('dimconv: 1 for YES or 0 for NO')
     args.dimconv = bool(args.dimconv)
 
     # dimensions string validation and conversion to list for future usage

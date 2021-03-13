@@ -1,3 +1,4 @@
+import argparse
 
 
 def clean_phone(phone):
@@ -28,9 +29,52 @@ def split_array(lst, count):
     return result
 
 
+def get_cmd_args():
+    parser = argparse.ArgumentParser(description='Videos to images')
+    parser.add_argument('--dtype', type=int, help='Delivery type: 1 or 2\ndefault=2', default=2, required=False)
+    parser.add_argument(
+        '--disc',
+        type=int,
+        help='Discount for all orders, in percents. 0 for raw price\ndefault=40',
+        default=40,
+        required=False
+    )
+    parser.add_argument(
+        '--dimconv',
+        type=int,
+        help='Dimension conversion from cm to mm. 0 for YES or 1 for NO.\ndefault=1',
+        default=1,
+        required=False
+    )
+    parser.add_argument(
+        '--dim',
+        type=str,
+        help='Default dimension in mm. Format: "length*width*height" Example: 10*15*20.\ndefault="1*1*1"',
+        default="1*1*1",
+        required=False
+    )
+    args = parser.parse_args()
 
+    # prepare discount for future usage
+    args.disc = args.disc / 100 if args.disc > 0 else 1
 
-if __name__ == '__main__':
-    test_list = list(range(30))
+    # delivery type validation
+    if args.dtype not in [1, 2]:
+        raise ValueError('Delivery type: 1 or 2')
 
-    print(split_array(test_list, 9))
+    # dimconv validation
+    if args.dimconv not in [1, 0]:
+        raise ValueError('dimconv: 0 for YES or 1 for NO')
+    args.dimconv = bool(args.dimconv)
+
+    # dimensions string validation and conversion to list for future usage
+    try:
+        dimensions = [int(d) for d in args.dim.split("*")]
+        if len(dimensions) != 3:
+            raise
+        args.dim = dimensions
+    except:
+        raise ValueError(f'Wrong dimension format {args.dim}. Format "length*width*height" Example: 10*15*20')
+
+    print(args)
+    return args

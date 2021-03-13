@@ -1,3 +1,4 @@
+import argparse
 from urllib.parse import urljoin
 
 import requests
@@ -6,7 +7,7 @@ from settings import app_settings
 
 
 class EcwidClient:
-    def __init__(self, token, store_id):
+    def __init__(self, token: str, store_id: str):
         self.token = token
         self.store_id = store_id
 

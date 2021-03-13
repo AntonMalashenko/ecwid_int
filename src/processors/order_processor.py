@@ -1,3 +1,4 @@
+import argparse
 import copy
 
 from settings.app_settings import MAX_PRODUCT_LENGTH
@@ -9,8 +10,9 @@ class OrderProcessor:
     response = None
     products = dict()
 
-    def __init__(self, client):
+    def __init__(self, client, extra_args: argparse.Namespace):
         self.client = client
+        self.extra_args = extra_args
 
     def start(self):
         self.response = self.client.search_orders()
@@ -22,7 +24,14 @@ class OrderProcessor:
             response = self.client.get_products(array).get('items')
             products.extend(response)
         products = self.create_products_dict(products)
-        make_table(orders, products)
+        make_table(
+            orders,
+            products,
+            self.extra_args.disc,
+            self.extra_args.dim,
+            self.extra_args.dtype,
+            self.extra_args.dimconv
+        )
 
     def create_products_dict(self, products):
         return {

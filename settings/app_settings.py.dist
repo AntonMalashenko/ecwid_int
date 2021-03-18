@@ -1,0 +1,25 @@
+import os
+
+API_PUBLIC_TOKEN = ####
+API_PRIVATE_TOKEN = ####
+STORE_ID = ####
+
+BASE_ECWID_URL = 'https://app.ecwid.com'
+
+ORDER_DETAIL_URL_TEMPLATE = '/api/v3/{store_id}/orders/{order_id}'
+
+ORDER_SEARCH_URL_TEMPLATE = '/api/v3/{store_id}/orders'
+PRODUCT_SEARCH_URL_TEMPLATE = '/api/v3/{}/products?productId={}'
+
+STORE_PROFILE_URL_TEMPLATE = '/api/v3/{store_id}/profile'
+
+TEST_ORDERS = [66, 67 ,68]
+
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), ".."),
+)
+
+FILES_DIR_NAME = 'generated_files'
+FILES_PATH = os.path.join(PROJECT_ROOT, FILES_DIR_NAME)
+
+MAX_PRODUCT_LENGTH = 100

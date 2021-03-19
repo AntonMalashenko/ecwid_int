@@ -32,11 +32,12 @@ def split_array(lst, count):
 def get_cmd_args():
     parser = argparse.ArgumentParser(description='Videos to images')
     parser.add_argument('--dtype', type=int, help='Delivery type: 1 or 2\ndefault=2', default=2, required=False)
+    parser.add_argument('--country_code', type=int, help='Country Code\ndefault=643(Russia)', default=643, required=False)
     parser.add_argument(
-        '--disc',
-        type=int,
-        help='Discount for all orders, in percents. 0 for raw price\ndefault=40',
-        default=40,
+        '--mult',
+        type=float,
+        help='Multiplier for all orders. 1 for raw price\ndefault=1. Example: --mult 0.9 (10% discount)',
+        default=1,
         required=False
     )
     parser.add_argument(
@@ -54,9 +55,6 @@ def get_cmd_args():
         required=False
     )
     args = parser.parse_args()
-
-    # prepare discount for future usage
-    args.disc = args.disc / 100 if args.disc > 0 else 1
 
     # delivery type validation
     if args.dtype not in [1, 2]:

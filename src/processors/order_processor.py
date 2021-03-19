@@ -27,10 +27,11 @@ class OrderProcessor:
         make_table(
             orders,
             products,
-            self.extra_args.disc,
+            self.extra_args.mult,
             self.extra_args.dim,
             self.extra_args.dtype,
-            self.extra_args.dimconv
+            self.extra_args.dimconv,
+            self.extra_args.country_code,
         )
 
     def create_products_dict(self, products):

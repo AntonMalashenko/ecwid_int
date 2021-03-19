@@ -1,7 +1,7 @@
 HEADER = [
     "Номер заказа/\nOrder number",
-    "Штрихкод паллеты/\nBarcode of pallet",
-    "Штрихкод короба/\nBarcode of main box",
+    # "Штрихкод паллеты/\nBarcode of pallet",
+    # "Штрихкод короба/\nBarcode of main box",
     "Штрихкод посылки/\nbarcode of parcel",
     "Длина коробки (мм)/\nbox length (mm)",
     "Ширина коробки (мм)/\nbox wigth (mm)",
@@ -24,6 +24,7 @@ HEADER = [
     "Почтовый индекс получателя/\nRecipient's ZIP code",
     "Город получателя/\nRecipient's city",
     "Адрес получателя/\nRecipient's address",
+
     "Артикул товара/\nItem ID or SKU",
     "Производитель/\nБренд/\nBrand/\nProducer/\nTrademark",
     "Наименование/\nItem name (Model)",

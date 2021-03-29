@@ -25,14 +25,26 @@ def split_array(lst, count):
                 result.append(nested_res)
         else:
             result.append(nested_res)
-            nested_res = [item,]
+            nested_res = [item, ]
     return result
 
 
 def get_cmd_args():
     parser = argparse.ArgumentParser(description='Videos to images')
-    parser.add_argument('--dtype', type=int, help='Delivery type: 1 or 2\ndefault=2', default=2, required=False)
-    parser.add_argument('--country_code', type=int, help='Country Code\ndefault=643(Russia)', default=643, required=False)
+    parser.add_argument(
+        '--dtype',
+        type=int,
+        help='Delivery type: 1 or 2\ndefault=2',
+        default=2,
+        required=False
+    )
+    parser.add_argument(
+        '--country_code',
+        type=int,
+        help='Country Code\ndefault=643(Russia)',
+        default=643,
+        required=False
+    )
     parser.add_argument(
         '--mult',
         type=float,

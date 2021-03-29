@@ -18,6 +18,7 @@ def app(
     token: str = None,
     store_id: str = None
 ):
+    os.environ["PYTHONIOENCODING"] = 'UTF-8'
     create_file_dir()
     client = EcwidClient(
         token=token or app_settings.API_PRIVATE_TOKEN,

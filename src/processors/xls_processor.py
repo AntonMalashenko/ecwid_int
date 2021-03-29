@@ -1,4 +1,5 @@
 import os
+import string
 from datetime import datetime
 from functools import partial
 
@@ -6,9 +7,18 @@ import openpyxl
 from openpyxl.styles import Alignment, PatternFill, Font, Border, Side
 from openpyxl.styles.colors import YELLOW, BLACK, DARKYELLOW
 
-from settings.app_settings import FILES_PATH
+from settings.app_settings import FILES_PATH, STORE_ID
 from settings.table_constants import HEADER, SITE_URL
 from src.utils import clean_phone
+
+
+CYRILLIC = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя'
+ALLOWED_SYMBOLS = string.printable + CYRILLIC
+
+
+def clean_description(text: str) -> str:
+    result = filter(lambda x: x if x in ALLOWED_SYMBOLS else '', text)
+    return ''.join(result)
 
 
 def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, country_code):
@@ -101,6 +111,10 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
         set_cell(column=10, value=country_code)  # "Код страны назначения\n(ISO 3166-1, 643 для России)/\nCode of country of destina
 
         postal_code = person.get('postalCode')
+        try:
+            postal_code = int(postal_code)
+        except:
+            postal_code = ''
         set_cell(column=11, value=postal_code)  # "Почтовый индекс получателя/\nRecipient's ZIP code",
 
         city = person.get('city')
@@ -118,7 +132,7 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
             prod_attrs = product.get('attributes')
         except AttributeError:
             prod_attrs = dict()
-        brand = ''
+        brand = 'unknown'
         if prod_attrs:
             for attr in prod_attrs:
                 if attr.get('type') == 'BRAND':
@@ -140,7 +154,7 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
         set_cell(column=21, value=url)  # "Ссылка на товар в \nинтернет-магазине/\nLink to the item innan online-store",
         set_cell(column=22, value=SITE_URL)  # "Адрес интернет-магазина/\nOnline shop website",
         set_cell(column=23, value=order.get('HS_Code'))  # not found   "Код ТН ВЭД/\nHS Code",
-        set_cell(column=24, value=order.get('shortDescription'))  # "Краткое описание \n(на языке поставщика)/\nItem Description in English",
+        set_cell(column=24, value=clean_description(order.get('shortDescription', '')))  # "Краткое описание \n(на языке поставщика)/\nItem Description in English",
 
         translated_descr = order\
             .get('shortDescriptionTranslated')\
@@ -148,7 +162,7 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
             if order.get('shortDescriptionTranslated') \
             else ''
 
-        set_cell(column=25, value=translated_descr)  # "Краткое описание (рус)/\nItem description in Russian",
+        set_cell(column=25, value=clean_description(translated_descr))  # "Краткое описание (рус)/\nItem description in Russian",
         set_cell(column=26, value=order.get('email'))  # "Customer's E-mail/\nE-mail получателя",
         set_cell(column=27, value=order.get('passport country'))  # not found   "Код страны выдавшей паспорт/\nPassport country code(ISO 3166-1)",
         set_cell(column=28, value=order.get('Passport series '))  # not found   "Серия и номер паспорта/\nPassport series and number",
@@ -160,20 +174,19 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
         set_cell(column=34, value=order.get('Individual Tax ID'))  # not found   "ИНН получателя/\nIndividual Tax ID (INN)",
         row += 1
 
-    for col in [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 16, 19, 20, 21, 22, 25, 29, 30, 31, 32, 33, 34, 35, 36, ]:
-        sheet.column_dimensions[
-            set_cell(column=col).column_letter].width = 20
-
-    for col in [18, 23, 26]:
-        sheet.column_dimensions[
-            set_cell(column=col).column_letter].width = 100
+    # no need to set cols size
+    # for col in [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 16, 19, 20, 21, 22, 25, 29, 30, 31, 32, 33, 34, 35, 36, ]:
+    #     sheet.column_dimensions[set_cell(column=col).column_letter].width = 20
+    #
+    # for col in [18, 23, 26]:
+    #     sheet.column_dimensions[set_cell(column=col).column_letter].width = 100
 
     save_table(workbook)
 
 
 def save_table(wb):
-    now = datetime.now().strftime("%d_%m_%Y_%H_%M")
-    filename = now + ".xls"
+    now = int(datetime.now().timestamp())
+    filename = f"{STORE_ID}_{now}.xlsx"
     path = os.path.join(FILES_PATH, filename)
     wb.save(filename=path)
     print("### file {} created".format(path))

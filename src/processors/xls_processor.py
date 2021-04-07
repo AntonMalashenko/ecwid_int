@@ -142,8 +142,9 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
         set_cell(column=17, value=order.get('quantity'))  # "Количество/\nQuantity",
 
         price = product.get('price')
-        new_price = round(float(price * multiplier), 2)
-        set_cell(column=18, value=new_price)  # "Цена 1 единицы/\nPrice for 1 item",
+        if price:
+            price = round(float(price * multiplier), 2)
+        set_cell(column=18, value=price)  # "Цена 1 единицы/\nPrice for 1 item",
         set_cell(column=19, value="USD")  # "Валюта цены  (EUR, USD, GBP, RUB)/\nCurrency",
         try:
             set_cell(column=20, value=product.get('weight'))  # "Вес брутто 1 единицы (грамм)/\nGross weight of 1 item (gr)",

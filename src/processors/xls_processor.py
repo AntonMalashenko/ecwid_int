@@ -4,13 +4,11 @@ from datetime import datetime
 from functools import partial
 
 import openpyxl
-from openpyxl.styles import Alignment, PatternFill, Font, Border, Side
-from openpyxl.styles.colors import YELLOW, BLACK, DARKYELLOW
+from openpyxl.styles import Alignment, Font
 
-from settings.app_settings import FILES_PATH, STORE_ID
+from settings.app_settings import FILES_PATH
 from settings.table_constants import HEADER, SITE_URL
 from src.utils import clean_phone
-
 
 CYRILLIC = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя'
 ALLOWED_SYMBOLS = string.printable + CYRILLIC
@@ -37,37 +35,7 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
         set_cell = sheet.cell(row=1, column=index, value=col)
 
         set_cell.alignment = header_alignment
-        set_cell.border = Border(
-            left=Side(
-                border_style='thin',
-                color=BLACK
-            ),
-            right=Side(
-                border_style='thin',
-                color=BLACK
-            ),
-            top=Side(
-                border_style='thin',
-                color=BLACK
-            ),
-            bottom=Side(
-                border_style='thin',
-                color=BLACK
-            )
-        )
         set_cell.font = Font(size=12, )
-        if index % 2 == 0:
-            set_cell.fill = PatternFill(
-                start_color=YELLOW,
-                end_color=YELLOW,
-                fill_type='solid'
-            )
-        else:
-            set_cell.fill = PatternFill(
-                start_color=DARKYELLOW,
-                end_color=DARKYELLOW,
-                fill_type='solid'
-            )
         sheet.column_dimensions[set_cell.column_letter].width = 40
 
     sheet.row_dimensions[1].height = 60
@@ -186,8 +154,8 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
 
 
 def save_table(wb):
-    now = int(datetime.now().timestamp())
-    filename = f"{STORE_ID}_{now}.xlsx"
+    now = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+    filename = now + ".xls"
     path = os.path.join(FILES_PATH, filename)
     wb.save(filename=path)
     print("### file {} created".format(path))

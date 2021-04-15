@@ -156,7 +156,7 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
 
 def save_table(wb):
     now = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
-    filename = f"{STORE_ID}_{now}.xls""
+    filename = f"{STORE_ID}_{now}.xls"
     path = os.path.join(FILES_PATH, filename)
     wb.save(filename=path)
     print("### file {} created".format(path))

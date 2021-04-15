@@ -6,9 +6,10 @@ from functools import partial
 import openpyxl
 from openpyxl.styles import Alignment, Font
 
-from settings.app_settings import FILES_PATH
+from settings.app_settings import FILES_PATH, STORE_ID
 from settings.table_constants import HEADER, SITE_URL
 from src.utils import clean_phone
+
 
 CYRILLIC = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя'
 ALLOWED_SYMBOLS = string.printable + CYRILLIC
@@ -155,7 +156,7 @@ def make_table(data, products, multiplier, dimensions, delivery_type, dimconv, c
 
 def save_table(wb):
     now = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
-    filename = now + ".xls"
+    filename = f"{STORE_ID}_{now}.xls""
     path = os.path.join(FILES_PATH, filename)
     wb.save(filename=path)
     print("### file {} created".format(path))
